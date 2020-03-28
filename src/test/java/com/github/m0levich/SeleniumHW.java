@@ -32,12 +32,12 @@ public class SeleniumHW {
         webDriver.get("https://savkk.github.io/selenium-practice/");
         webDriver.findElement(By.id("button")).click();
         webDriver.findElement(By.id("first")).click();
-        WebElement result = webDriver.findElement(By.xpath("/html/body/div/div/div/label[2]"));
+        WebElement result = webDriver.findElement(By.xpath("//label[2]"));
         Assert.assertEquals(result.getText(), "Excellent!");
-        WebElement button = webDriver.findElement(By.xpath("/html/body/div/div/div/input"));
+        WebElement button = webDriver.findElement(By.xpath("//input[1]"));
         assertThat(button.getAttribute("value")).isEqualToIgnoringCase("CLICK ME TOO!");
         button.click();
-        WebElement returnButton = webDriver.findElement(By.xpath("/html/body/div/div/div/label[3]/a"));
+        WebElement returnButton = webDriver.findElement(By.xpath("//label[@id='back']/a"));
         Assert.assertEquals(returnButton.getText(), "Great! Return to menu");
         returnButton.click();
         webDriver.findElement(By.id("checkbox")).click();
@@ -53,7 +53,7 @@ public class SeleniumHW {
         webDriver.findElement(By.id("radio_go")).click();
         WebElement radioResult = webDriver.findElement(By.id("radio_result"));
         Assert.assertEquals(radioResult.getText(),radioTwo.getAttribute("value"));
-        WebElement returnMenu = webDriver.findElement(By.xpath("/html/body/div/div/div/label[9]/a"));
+        WebElement returnMenu = webDriver.findElement(By.xpath("//label[@id='back']/a"));
         Assert.assertEquals(returnMenu.getText(),"Great! Return to menu");
     }
 
