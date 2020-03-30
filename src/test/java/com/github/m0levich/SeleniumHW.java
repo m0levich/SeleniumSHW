@@ -1,9 +1,7 @@
 package com.github.m0levich;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
@@ -34,7 +32,7 @@ public class SeleniumHW {
     public void seleniumHW_2() {
         webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         webDriver.get("https://savkk.github.io/selenium-practice/");
-        webDriver.findElement(By.id("button")).click();
+        sectionSelection("button");
         webDriver.findElement(By.id("first")).click();
         WebElement result = webDriver.findElement(By.xpath("//label[2]"));
         Assert.assertEquals(result.getText(), "Excellent!");
@@ -42,7 +40,7 @@ public class SeleniumHW {
         assertThat(button.getAttribute("value")).isEqualToIgnoringCase("CLICK ME TOO!");
         button.click();
         returnToMenu();
-        webDriver.findElement(By.id("checkbox")).click();
+        sectionSelection("checkbox");
         WebElement checkOne = webDriver.findElement(By.id("one"));
         checkOne.click();
         WebElement checkTwo = webDriver.findElement(By.id("two"));
@@ -56,7 +54,7 @@ public class SeleniumHW {
         WebElement radioResult = webDriver.findElement(By.id("radio_result"));
         Assert.assertEquals(radioResult.getText(), radioTwo.getAttribute("value"));
         returnToMenu();
-        webDriver.findElement(By.xpath("//a[.='Select']")).click();
+        sectionSelection("select");
         WebElement selectHero = webDriver.findElement(By.name("hero"));
         Select select = new Select(selectHero);
         select.selectByVisibleText("Niklaus Wirth");
@@ -70,7 +68,7 @@ public class SeleniumHW {
         WebElement selectResultLang = webDriver.findElement(By.xpath("//label[@name='result'][2]"));
         Assert.assertEquals("Java, Basic", selectResultLang.getText());
         returnToMenu();
-        webDriver.findElement(By.id("form")).click();
+        sectionSelection("form");
         fillFild("First Name:", "Ivan");
         fillFild("Last Name:", "Ivanov");
         fillFild("Email:", "ivantest@mail.ru");
@@ -80,20 +78,73 @@ public class SeleniumHW {
         webDriver.findElement(By.xpath("//label[.='Avatar:']/following-sibling::input[1]")).sendKeys(System.getProperty("user.dir") + "/picture.jpeg");
         webDriver.findElement(By.xpath("//input[@type=\"submit\"]")).click();
         returnToMenu();
-        webDriver.findElement(By.id("iframe")).click();
+        sectionSelection("iframe");
         webDriver.switchTo().frame(0);
         WebElement codeElement = webDriver.findElement(By.id("code"));
         String code = codeElement.getText();
 
-        for (String retval : code.split(" ")) {
-            code = retval;
+        for (String a : code.split(" ")) {
+            code = a;
         }
 
         webDriver.switchTo().defaultContent();
         webDriver.findElement(By.xpath("//input[@name='code']")).sendKeys(code);
         webDriver.findElement(By.xpath("//input[@name='ok']")).click();
         returnToMenu();
+        sectionSelection("alerts");
+        webDriver.findElement(By.xpath("//button[@class='get']")).click();
+        Alert alertWithPassword = webDriver.switchTo().alert();
+        String password = alertWithPassword.getText();
+
+        for (String a : password.split(" ")) {
+            password = a;
+        }
+
+        alertWithPassword.accept();
+        webDriver.findElement(By.xpath("//button[@class='set']")).click();
+
+        Alert entryPassword = webDriver.switchTo().alert();
+        entryPassword.sendKeys(password);
+        entryPassword.accept();
+        WebElement actualText = webDriver.findElement(By.xpath("//button[@class='set']/following::label"));
+        Assert.assertEquals(actualText.getText(),"Great!");
+        webDriver.findElement(By.xpath("//button[@class='return']")).click();
+        webDriver.switchTo().alert().accept();
+
+        sectionSelection("table");
+
+        webDriver.findElement(By.xpath("//td[.='Ernst Handel']//ancestor::tr//input")).click();
+        webDriver.findElement(By.xpath("//td[.='Canada']//ancestor::tr//input")).click();
+        webDriver.findElement(By.xpath("//input[@value='Delete']")).click();
+
+        fillFildforTable("Company", "Magazzini");
+        fillFildforTable("Contact","Giovanni Bennett");
+        fillFildforTable("Country", "UK");
+        webDriver.findElement(By.xpath("//input[@value='Add']")).click();
+        returnToMenu();
     }
+
+    @Test
+    public void negativeAlertsTest(){
+        webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        webDriver.get("https://savkk.github.io/selenium-practice/");
+        sectionSelection("alerts");
+        webDriver.findElement(By.xpath("//button[@class='get']")).click();
+        Alert alertWithPassword = webDriver.switchTo().alert();
+        String password = alertWithPassword.getText();
+        alertWithPassword.accept();
+        webDriver.findElement(By.xpath("//button[@class='set']")).click();
+
+        Alert entryPassword = webDriver.switchTo().alert();
+        entryPassword.sendKeys(password);
+        entryPassword.accept();
+
+        String xpath = "//button[@class='set']/following::label";
+
+        Assert.assertEquals(existsElement(xpath),false);
+    }
+
+
 
     @AfterMethod
     public void closeDriver() {
@@ -108,5 +159,22 @@ public class SeleniumHW {
 
     public void fillFild(String fieldTitle, String value) {
         webDriver.findElement(By.xpath("//label[.='" + fieldTitle + "']/following-sibling::input[1]")).sendKeys(value);
+    }
+
+    public void fillFildforTable(String fieldTitle, String value) {
+        webDriver.findElement(By.xpath("//label[.='"+ fieldTitle +"']/following-sibling::input[@type='text']")).sendKeys(value);
+    }
+
+    public void sectionSelection(String id) {
+        webDriver.findElement(By.id(id)).click();
+    }
+
+    private boolean existsElement(String xpath) {
+        try {
+            webDriver.findElement(By.xpath(xpath));
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 }
