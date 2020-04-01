@@ -32,7 +32,9 @@ public class SeleniumHW {
     public void seleniumHW_2() {
         webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         webDriver.get("https://savkk.github.io/selenium-practice/");
-        sectionSelection("button");
+        webDriver.manage().window().maximize();
+        String buttonSelection = "button";
+        sectionSelection(buttonSelection);
         webDriver.findElement(By.id("first")).click();
         WebElement result = webDriver.findElement(By.xpath("//label[2]"));
         Assert.assertEquals(result.getText(), "Excellent!");
@@ -40,7 +42,11 @@ public class SeleniumHW {
         assertThat(button.getAttribute("value")).isEqualToIgnoringCase("CLICK ME TOO!");
         button.click();
         returnToMenu();
-        sectionSelection("checkbox");
+        cookiesAdd(buttonSelection);
+        checkCookieValue(buttonSelection);
+
+        String checkbox = "checkbox";
+        sectionSelection(checkbox);
         WebElement checkOne = webDriver.findElement(By.id("one"));
         checkOne.click();
         WebElement checkTwo = webDriver.findElement(By.id("two"));
@@ -54,7 +60,11 @@ public class SeleniumHW {
         WebElement radioResult = webDriver.findElement(By.id("radio_result"));
         Assert.assertEquals(radioResult.getText(), radioTwo.getAttribute("value"));
         returnToMenu();
-        sectionSelection("select");
+        cookiesAdd(checkbox);
+        checkCookieValue(checkbox);
+
+        String selector = "select";
+        sectionSelection(selector);
         WebElement selectHero = webDriver.findElement(By.name("hero"));
         Select select = new Select(selectHero);
         select.selectByVisibleText("Niklaus Wirth");
@@ -68,7 +78,11 @@ public class SeleniumHW {
         WebElement selectResultLang = webDriver.findElement(By.xpath("//label[@name='result'][2]"));
         Assert.assertEquals("Java, Basic", selectResultLang.getText());
         returnToMenu();
-        sectionSelection("form");
+        cookiesAdd(selector);
+        checkCookieValue(selector);
+
+        String form = "form";
+        sectionSelection(form);
         fillFild("First Name:", "Ivan");
         fillFild("Last Name:", "Ivanov");
         fillFild("Email:", "ivantest@mail.ru");
@@ -78,7 +92,11 @@ public class SeleniumHW {
         webDriver.findElement(By.xpath("//label[.='Avatar:']/following-sibling::input[1]")).sendKeys(System.getProperty("user.dir") + "/picture.jpeg");
         webDriver.findElement(By.xpath("//input[@type=\"submit\"]")).click();
         returnToMenu();
-        sectionSelection("iframe");
+        cookiesAdd(form);
+        checkCookieValue(form);
+
+        String iFrame = "iframe";
+        sectionSelection(iFrame);
         webDriver.switchTo().frame(0);
         WebElement codeElement = webDriver.findElement(By.id("code"));
         String code = codeElement.getText();
@@ -91,7 +109,11 @@ public class SeleniumHW {
         webDriver.findElement(By.xpath("//input[@name='code']")).sendKeys(code);
         webDriver.findElement(By.xpath("//input[@name='ok']")).click();
         returnToMenu();
-        sectionSelection("alerts");
+        cookiesAdd(iFrame);
+        checkCookieValue(iFrame);
+
+        String alerts = "alerts";
+        sectionSelection(alerts);
         webDriver.findElement(By.xpath("//button[@class='get']")).click();
         Alert alertWithPassword = webDriver.switchTo().alert();
         String password = alertWithPassword.getText();
@@ -102,30 +124,32 @@ public class SeleniumHW {
 
         alertWithPassword.accept();
         webDriver.findElement(By.xpath("//button[@class='set']")).click();
-
         Alert entryPassword = webDriver.switchTo().alert();
         entryPassword.sendKeys(password);
         entryPassword.accept();
         WebElement actualText = webDriver.findElement(By.xpath("//button[@class='set']/following::label"));
-        Assert.assertEquals(actualText.getText(),"Great!");
+        Assert.assertEquals(actualText.getText(), "Great!");
         webDriver.findElement(By.xpath("//button[@class='return']")).click();
         webDriver.switchTo().alert().accept();
+        cookiesAdd(alerts);
+        checkCookieValue(alerts);
 
-        sectionSelection("table");
-
+        String table = "table";
+        sectionSelection(table);
         webDriver.findElement(By.xpath("//td[.='Ernst Handel']//ancestor::tr//input")).click();
         webDriver.findElement(By.xpath("//td[.='Canada']//ancestor::tr//input")).click();
         webDriver.findElement(By.xpath("//input[@value='Delete']")).click();
-
         fillFildforTable("Company", "Magazzini");
-        fillFildforTable("Contact","Giovanni Bennett");
+        fillFildforTable("Contact", "Giovanni Bennett");
         fillFildforTable("Country", "UK");
         webDriver.findElement(By.xpath("//input[@value='Add']")).click();
         returnToMenu();
+        cookiesAdd(table);
+        checkCookieValue(table);
     }
 
     @Test
-    public void negativeAlertsTest(){
+    public void negativeAlertsTest() {
         webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         webDriver.get("https://savkk.github.io/selenium-practice/");
         sectionSelection("alerts");
@@ -141,9 +165,10 @@ public class SeleniumHW {
 
         String xpath = "//button[@class='set']/following::label";
 
-        Assert.assertEquals(existsElement(xpath),false);
+        Assert.assertEquals(existsElement(xpath), false);
+        cookiesAdd("negativeTest");
+        checkCookieValue("negativeTest");
     }
-
 
 
     @AfterMethod
@@ -162,7 +187,7 @@ public class SeleniumHW {
     }
 
     public void fillFildforTable(String fieldTitle, String value) {
-        webDriver.findElement(By.xpath("//label[.='"+ fieldTitle +"']/following-sibling::input[@type='text']")).sendKeys(value);
+        webDriver.findElement(By.xpath("//label[.='" + fieldTitle + "']/following-sibling::input[@type='text']")).sendKeys(value);
     }
 
     public void sectionSelection(String id) {
@@ -176,5 +201,14 @@ public class SeleniumHW {
             return false;
         }
         return true;
+    }
+
+    public void cookiesAdd(String name) {
+        Cookie cookie = new Cookie(name, "done");
+        webDriver.manage().addCookie(cookie);
+    }
+
+    public void checkCookieValue(String name){
+        Assert.assertEquals(webDriver.manage().getCookieNamed(name).getValue(),"done");
     }
 }
