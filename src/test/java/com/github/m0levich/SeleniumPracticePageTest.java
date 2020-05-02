@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SeleniumHW {
+public class SeleniumPracticePageTest {
 
     private WebDriver webDriver;
 
@@ -26,13 +26,13 @@ public class SeleniumHW {
     @BeforeMethod
     public void initDriver() {
         webDriver = new ChromeDriver();
-    }
-
-    @Test
-    public void seleniumHW_2() {
         webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         webDriver.get("https://savkk.github.io/selenium-practice/");
         webDriver.manage().window().maximize();
+    }
+
+    @Test
+    public void buttonTest() {
         String buttonSelection = "button";
         sectionSelection(buttonSelection);
         webDriver.findElement(By.id("first")).click();
@@ -44,7 +44,10 @@ public class SeleniumHW {
         returnToMenu();
         cookiesAdd(buttonSelection);
         checkCookieValue(buttonSelection);
+    }
 
+    @Test
+    public void checkboxTest() {
         String checkbox = "checkbox";
         sectionSelection(checkbox);
         WebElement checkOne = webDriver.findElement(By.id("one"));
@@ -62,7 +65,10 @@ public class SeleniumHW {
         returnToMenu();
         cookiesAdd(checkbox);
         checkCookieValue(checkbox);
+    }
 
+    @Test
+    public void selectTest() {
         String selector = "select";
         sectionSelection(selector);
         WebElement selectHero = webDriver.findElement(By.name("hero"));
@@ -80,7 +86,10 @@ public class SeleniumHW {
         returnToMenu();
         cookiesAdd(selector);
         checkCookieValue(selector);
+    }
 
+    @Test
+    public void formTest() {
         String form = "form";
         sectionSelection(form);
         fillFild("First Name:", "Ivan");
@@ -94,7 +103,10 @@ public class SeleniumHW {
         returnToMenu();
         cookiesAdd(form);
         checkCookieValue(form);
+    }
 
+    @Test
+    public void iFrameTest() {
         String iFrame = "iframe";
         sectionSelection(iFrame);
         webDriver.switchTo().frame(0);
@@ -111,7 +123,10 @@ public class SeleniumHW {
         returnToMenu();
         cookiesAdd(iFrame);
         checkCookieValue(iFrame);
+    }
 
+    @Test
+    public void alertTest() {
         String alerts = "alerts";
         sectionSelection(alerts);
         webDriver.findElement(By.xpath("//button[@class='get']")).click();
@@ -133,15 +148,17 @@ public class SeleniumHW {
         webDriver.switchTo().alert().accept();
         cookiesAdd(alerts);
         checkCookieValue(alerts);
+    }
 
+    @Test
+    public void tableTest() {
         String table = "table";
         sectionSelection(table);
         webDriver.findElement(By.xpath("//td[.='Ernst Handel']//ancestor::tr//input")).click();
         webDriver.findElement(By.xpath("//td[.='Canada']//ancestor::tr//input")).click();
         webDriver.findElement(By.xpath("//input[@value='Delete']")).click();
-        fillFildforTable("Company", "Magazzini");
-        fillFildforTable("Contact", "Giovanni Bennett");
-        fillFildforTable("Country", "UK");
+        Company company = new Company("Magazzini","Giovanni Bennett","UK");
+        fillFildforTable(company);
         webDriver.findElement(By.xpath("//input[@value='Add']")).click();
         returnToMenu();
         cookiesAdd(table);
@@ -186,8 +203,10 @@ public class SeleniumHW {
         webDriver.findElement(By.xpath("//label[.='" + fieldTitle + "']/following-sibling::input[1]")).sendKeys(value);
     }
 
-    private void fillFildforTable(String fieldTitle, String value) {
-        webDriver.findElement(By.xpath("//label[.='" + fieldTitle + "']/following-sibling::input[@type='text']")).sendKeys(value);
+    private void fillFildforTable(Company company) {
+        webDriver.findElement(By.xpath("//label[.='Company']/following-sibling::input[@type='text']")).sendKeys(company.getCompany());
+        webDriver.findElement(By.xpath("//label[.='Contact']/following-sibling::input[@type='text']")).sendKeys(company.getContact());
+        webDriver.findElement(By.xpath("//label[.='Country']/following-sibling::input[@type='text']")).sendKeys(company.getCountry());
     }
 
     private void sectionSelection(String id) {
