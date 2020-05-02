@@ -167,8 +167,6 @@ public class SeleniumPracticePageTest {
 
     @Test
     public void negativeAlertsTest() {
-        webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        webDriver.get("https://savkk.github.io/selenium-practice/");
         sectionSelection("alerts");
         webDriver.findElement(By.xpath("//button[@class='get']")).click();
         Alert alertWithPassword = webDriver.switchTo().alert();
