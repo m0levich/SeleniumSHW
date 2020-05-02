@@ -37,9 +37,9 @@ public class SeleniumPracticePageTest {
         sectionSelection(buttonSelection);
         webDriver.findElement(By.id("first")).click();
         WebElement result = webDriver.findElement(By.xpath("//label[2]"));
-        Assert.assertEquals(result.getText(), "Excellent!");
+        Assert.assertEquals(result.getText(), "Excellent!","Result is not \"Excellent!\"");
         WebElement button = webDriver.findElement(By.xpath("//input[1]"));
-        assertThat(button.getAttribute("value")).isEqualToIgnoringCase("CLICK ME TOO!");
+        Assert.assertTrue(button.getAttribute("value").equalsIgnoreCase("CLICK ME TOO!"),"the button does not contain the text \"click me too!\"");
         button.click();
         returnToMenu();
         cookiesAdd(buttonSelection);
@@ -56,12 +56,12 @@ public class SeleniumPracticePageTest {
         checkTwo.click();
         webDriver.findElement(By.id("go")).click();
         WebElement resultCheckboxes = webDriver.findElement(By.id("result"));
-        Assert.assertEquals(resultCheckboxes.getText(), checkOne.getAttribute("value") + " " + checkTwo.getAttribute("value"));
+        Assert.assertEquals(resultCheckboxes.getText(), checkOne.getAttribute("value") + " " + checkTwo.getAttribute("value"),"Checkbox result failed");
         WebElement radioTwo = webDriver.findElement(By.id("radio_two"));
         radioTwo.click();
         webDriver.findElement(By.id("radio_go")).click();
         WebElement radioResult = webDriver.findElement(By.id("radio_result"));
-        Assert.assertEquals(radioResult.getText(), radioTwo.getAttribute("value"));
+        Assert.assertEquals(radioResult.getText(), radioTwo.getAttribute("value"),"Radio result failed");
         returnToMenu();
         cookiesAdd(checkbox);
         checkCookieValue(checkbox);
@@ -80,9 +80,9 @@ public class SeleniumPracticePageTest {
         selectLang.selectByVisibleText("Basic");
         webDriver.findElement(By.id("go")).click();
         WebElement selectResultHero = webDriver.findElement(By.xpath("//label[@name='result'][1]"));
-        Assert.assertEquals("Niklaus Wirth", selectResultHero.getText());
+        Assert.assertEquals("Niklaus Wirth", selectResultHero.getText(),"Result failed");
         WebElement selectResultLang = webDriver.findElement(By.xpath("//label[@name='result'][2]"));
-        Assert.assertEquals("Java, Basic", selectResultLang.getText());
+        Assert.assertEquals("Java, Basic", selectResultLang.getText(),"Result failed");
         returnToMenu();
         cookiesAdd(selector);
         checkCookieValue(selector);
@@ -143,7 +143,7 @@ public class SeleniumPracticePageTest {
         entryPassword.sendKeys(password);
         entryPassword.accept();
         WebElement actualText = webDriver.findElement(By.xpath("//button[@class='set']/following::label"));
-        Assert.assertEquals(actualText.getText(), "Great!");
+        Assert.assertEquals(actualText.getText(), "Great!","Result not displayed");
         webDriver.findElement(By.xpath("//button[@class='return']")).click();
         webDriver.switchTo().alert().accept();
         cookiesAdd(alerts);
@@ -180,7 +180,7 @@ public class SeleniumPracticePageTest {
 
         String xpath = "//button[@class='set']/following::label";
 
-        Assert.assertEquals(existsElement(xpath), false);
+        Assert.assertEquals(existsElement(xpath), false, "Element is displayed");
         cookiesAdd("negativeTest");
         checkCookieValue("negativeTest");
     }
@@ -193,7 +193,7 @@ public class SeleniumPracticePageTest {
 
     private void returnToMenu() {
         WebElement returnMenu = webDriver.findElement(By.xpath("//label[@id='back']/a"));
-        Assert.assertEquals(returnMenu.getText(), "Great! Return to menu");
+        Assert.assertEquals(returnMenu.getText(), "Great! Return to menu", "Button with text fail");
         returnMenu.click();
     }
 
@@ -226,7 +226,7 @@ public class SeleniumPracticePageTest {
     }
 
     private void checkCookieValue(String name){
-        Assert.assertEquals(webDriver.manage().getCookieNamed(name).getValue(),"done");
+        Assert.assertEquals(webDriver.manage().getCookieNamed(name).getValue(),"done","Check cookie value fail");
     }
 
 
