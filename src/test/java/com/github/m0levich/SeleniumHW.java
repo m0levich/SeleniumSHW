@@ -176,21 +176,21 @@ public class SeleniumHW {
         webDriver.quit();
     }
 
-    public void returnToMenu() {
+    private void returnToMenu() {
         WebElement returnMenu = webDriver.findElement(By.xpath("//label[@id='back']/a"));
         Assert.assertEquals(returnMenu.getText(), "Great! Return to menu");
         returnMenu.click();
     }
 
-    public void fillFild(String fieldTitle, String value) {
+    private void fillFild(String fieldTitle, String value) {
         webDriver.findElement(By.xpath("//label[.='" + fieldTitle + "']/following-sibling::input[1]")).sendKeys(value);
     }
 
-    public void fillFildforTable(String fieldTitle, String value) {
+    private void fillFildforTable(String fieldTitle, String value) {
         webDriver.findElement(By.xpath("//label[.='" + fieldTitle + "']/following-sibling::input[@type='text']")).sendKeys(value);
     }
 
-    public void sectionSelection(String id) {
+    private void sectionSelection(String id) {
         webDriver.findElement(By.id(id)).click();
     }
 
@@ -203,12 +203,14 @@ public class SeleniumHW {
         return true;
     }
 
-    public void cookiesAdd(String name) {
+    private void cookiesAdd(String name) {
         Cookie cookie = new Cookie(name, "done");
         webDriver.manage().addCookie(cookie);
     }
 
-    public void checkCookieValue(String name){
+    private void checkCookieValue(String name){
         Assert.assertEquals(webDriver.manage().getCookieNamed(name).getValue(),"done");
     }
+
+
 }
